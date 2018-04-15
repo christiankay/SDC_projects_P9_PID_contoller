@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The purpose of this project was to "build a PID controller and tune the PID hyperparameters by applying the general processing flow as described in the lessons," and to "test your solution on the simulator!" The simulator provides cross-track error (CTE), speed, and steering angle data via local websocket. The PID (proportional/integral/differential) controller must respond with steering and throttle commands to drive the car reliably around the simulator track.
+The purpose of this project was to "build a PID controller and tune the PID hyperparameters by applying the general processing flow as described in the lessons," and to "test your solution on the simulator!" The simulator (https://github.com/udacity/self-driving-car-sim/releases) provides cross-track error (CTE), speed, and steering angle data via local websocket. The PID (proportional/integral/differential) controller must respond with steering and throttle commands to drive the car reliably around the simulator track.
 
 ## Rubric Discussion Points
 
@@ -14,24 +14,14 @@ The D, or "differential", component counteracts the P component's tendency to ri
 
 The I, or "integral", component counteracts a bias in the CTE which prevents the P-D controller from reaching the center line. This bias can take several forms, such as a steering drift (as in the Control unit lessons), but I believe that in this particular implementation the I component particularly serves to reduce the CTE around curves.
 
-The final PID controller implementation performed much like in the following video (although, the controller performance suffered due to the screen recording consuming computation resources away from the websocket).
-
-[Final Parameters](https://github.com/jeremy-shannon/CarND-PID-Control-Project/blob/master/demo_videos/PID09%20-%20final%20settings.m4v)
-
-The following video demonstrates the subtle difference in performance when the I component is removed from the controller. Notice that the center line is not followed as closely around curves.
-
-[I Parameter Removed](https://github.com/jeremy-shannon/CarND-PID-Control-Project/blob/master/demo_videos/PID10%20-%20zero%20i.m4v)
-
-This final video demonstrates the disastrous effects of removing the D component from the controller. It begins to ring back and forth across the center line until finally leaving the track.
-
-[D Parameter Removed](https://github.com/jeremy-shannon/CarND-PID-Control-Project/blob/master/demo_videos/PID11%20-%20zero%20d.m4v)
-
 
 - *Describe how the final hyperparameters were chosen.*
 
-Hyperparameters were tuned manually at first. This was necessary because the narrow track left little room for error, and when attempting to automate parameter optimization (such as Twiddle) it was very common for the car to leave the track, thus invalidating the optimization. Once I found parameters that were able to get the car around the track reliably, I then implemented Twiddle. I felt it necessary to complete a full lap with each change in parameter because it was the only way to get a decent "score" (total error) for the parameter set. For this reason my parameter changes are allowed to "settle in" for 100 steps and are then evaluated for the next 2000 steps. In all, I allowed Twiddle to continue for over 1 million steps (or roughly 500 trips around the track) to fine tune the parameters to their final values (P: 0.134611, I: 0.000270736, D: 3.05349).
+Hyperparameters were tuned manually at first. Once I found parameters that were able to get the car around the track reliably, I then implemented Twiddle. In all, the twiddle-algorithm searches for parameters based on a tolerance value (in this case 1604 steps) to fine tune the parameters to their final values (P: 37.355, I: 29.842, D: 31.4127).
 
-I also implemented a PID controller for the throttle, to maximize the car's speed around the track. The throttle PID controller is fed the magnitude of the CTE because it doesn't make sense to throttle up for right-side CTE and down for left-side CTE, for example. For this reason the throttle controller doesn't include an I component, which would only grow indefinitely. The throttle controller was also fine-tuned using the same Twiddle loop, simultaneously with the steering controller. Though this is not an ideal setup (tuning parameters for two different controllers simultaneously), it still mostly converged to a good (if I do say so myself) solution.
+![Found parameter console print](/images/found_param.png)
+
+
 
 ---
 
