@@ -19,7 +19,7 @@ The I, or "integral", component counteracts a bias in the CTE which prevents the
 
 Hyperparameters were tuned manually at first. Once I found parameters that were able to get the car around the track reliably, I then implemented Twiddle. In all, the twiddle-algorithm searches for parameters based on a tolerance value (in this case 1604 steps) to fine tune the parameters to their final values (P: 37.355, I: 29.842, D: 31.4127).
 
-![Found parameter console print](/images/found_param.png)
+![Found parameter console print](/images/found_parameter.png)
 
 
 
